@@ -51,7 +51,7 @@ void GstAppSrcPipeline::Initialize(std::string pipelineString)
 
 bool GstAppSrcPipeline::GetNeedsData() const
 {
-	std::unique_lock<std::mutex> lock(pushBufferFlagMutex);
+	//std::lock_guard<std::mutex> lock(pushBufferFlagMutex);
 	return needsData;
 }
 

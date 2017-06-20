@@ -54,9 +54,9 @@ public:
 			std::cout << "OSC receiver is already listening, returning...\n";
 			return;
 		}
-		boost::mutex::scoped_lock lock(listenerMutex);
+		std::unique_lock<std::mutex> lock(listenerMutex);
 		signalNewOscMessageReceived.connect(message_parser);
-		listeningThread = boost::thread(&oscReceiver::listening, this);
+		listeningThread = std::thread(&oscReceiver::listening, this);
 		
 		isListening = true;
 	}
@@ -69,7 +69,7 @@ private:
 	
 	std::thread				listeningThread;
 	std::mutex				listenerMutex;
-	boost::signal<void (oscMessage*)> 	signalNewOscMessageReceived;
+	boost::signals2::signal<void (oscMessage*)> 	signalNewOscMessageReceived;
 	
 	MessageRetrievalMode retrievalMode;
 

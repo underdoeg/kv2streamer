@@ -41,7 +41,7 @@ oscReceiver::~oscReceiver()
 
 void oscReceiver::ProcessMessage(const osc::ReceivedMessage &_m, const IpEndpointName &remoteEndpoint)
 {
-	boost::mutex::scoped_lock lock(listenerMutex);
+	std::unique_lock<std::mutex> lock(listenerMutex);
 	
 	if (retrievalMode == SIGNAL_PARSER_ONLY_AFTER_RELEASE)
 	{
@@ -72,7 +72,7 @@ void oscReceiver::ProcessMessage(const osc::ReceivedMessage &_m, const IpEndpoin
 
 void oscReceiver::ReleaseMessage()
 {
-	boost::mutex::scoped_lock lock(listenerMutex);
+	std::unique_lock<std::mutex> lock(listenerMutex);
 	if (currentMessage) delete currentMessage;
 	currentMessage = 0;
 }

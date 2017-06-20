@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <iostream>
+
 #include "KV2Server.h"
 #include "Utilities.h"
 

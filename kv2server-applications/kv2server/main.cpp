@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <iostream>
+
 #include "KV2Server.h"
 
 int main(int argc, char **argv)

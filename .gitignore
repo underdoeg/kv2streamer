@@ -3,3 +3,14 @@
 *.o
 *.d
 Debug
+*.obj
+*.ipch
+kv2server-applications/kv2server_VS12/.vs/kv2server_VS12/v15/.suo
+*.db
+*.tlog
+**/packages/*
+*.pdb
+*.exe
+*.log
+*.iobj
+*.ipdb
