@@ -19,7 +19,7 @@
 #include <string>
 
 #include <gst/gst.h>
-#include <boost/thread.hpp>
+#include <thread>
 
 namespace kv2s {
 
@@ -45,7 +45,7 @@ private:
 	GstElement*		pipeline_;
 	GstBus*			bus_;
 
-	boost::thread	g_main_loop_thread_;
+	std::thread		g_main_loop_thread_;
 	void			RunningMainLoop();
 
 	void			FreePipeline();

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <iostream>
+
 #include "GstPipelineWrapper.h"
 
 namespace kv2s {
@@ -40,7 +42,7 @@ void GstPipelineWrapper::InitializePipelineWithString(std::string pipelineString
 	gst_bus_add_watch(bus_, (GstBusFunc) GstPipelineWrapper::GstMessageParser, this);
 	
 	/// Run the main loop to receive messages from bus
-	g_main_loop_thread_ = boost::thread(&GstPipelineWrapper::RunningMainLoop, this);
+	g_main_loop_thread_ = std::thread(&GstPipelineWrapper::RunningMainLoop, this);
 }
 
 GstElement* GstPipelineWrapper::GetElementByName(std::string element_name)

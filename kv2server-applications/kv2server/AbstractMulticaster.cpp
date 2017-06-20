@@ -30,14 +30,14 @@ HRESULT AbstractMulticaster::Initialize(IKinectSensor* kinectSensor)
 	// delegating to subclass
 	HRESULT hr = InitializeMulticasterAndSubscribeHandle(kinectSensor, waitableHandle); 
 	
-	multicastingThread = boost::thread(&AbstractMulticaster::Multicasting, this);
+	multicastingThread = std::thread(&AbstractMulticaster::Multicasting, this);
 	return hr;
 }
 
 
 void AbstractMulticaster::ResetTimeout()
 {
-	boost::mutex::scoped_lock(timerMutex);
+	std::unique_lock<std::mutex> lock(timerMutex);
 	timer = 0;
 }
 
@@ -51,7 +51,7 @@ void AbstractMulticaster::Multicasting()
 		{
 			if (multicastingMode == BY_REQUEST_ONLY)
 			{ // check if request is valid
-				boost::mutex::scoped_lock(timerMutex);
+				std::unique_lock<std::mutex> lock(timerMutex);
 				timer = min(timer + timeGetTime()-time, SERVER_STREAM_TIMEOUT_SECONDS*1000);
 				time = timeGetTime();
 

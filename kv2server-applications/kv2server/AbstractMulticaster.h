@@ -16,8 +16,9 @@
 
 #pragma once
 
+#include <thread>
+#include <mutex>
 #include "Kinect.h"
-#include <boost/thread.hpp>
 
 class AbstractMulticaster
 {
@@ -46,11 +47,11 @@ protected:
 private:
 	WAITABLE_HANDLE		waitableHandle;
 	
-	boost::mutex		timerMutex;
+	std::mutex		timerMutex;
 	int					timer;
 	int					time;
 
-	boost::thread		multicastingThread;
+	std::thread		multicastingThread;
 	void				Multicasting();
 	MulticastingMode	multicastingMode;
 };

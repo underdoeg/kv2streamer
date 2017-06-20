@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <mutex>
+
 #include <gst/app/gstappsrc.h>
 #include "GstPipelineWrapper.h"
 
@@ -34,7 +36,7 @@ public:
 
 private:
 
-	boost::mutex	pushBufferFlagMutex;
+	std::mutex	pushBufferFlagMutex;
 
 	std::string		multicastIP;
 	int				port; 

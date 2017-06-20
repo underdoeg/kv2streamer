@@ -13,10 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include <iostream>
 #include "GstreamerPipelines.h"
 #include "GstAppSrcPipeline.h"
+
+#include <mutex>
+
 
 namespace kv2s {
 
@@ -49,13 +51,13 @@ void GstAppSrcPipeline::Initialize(std::string pipelineString)
 
 bool GstAppSrcPipeline::GetNeedsData() const
 {
-	boost::mutex::scoped_lock(pushBufferFlagMutex);
+	std::unique_lock<std::mutex> lock(pushBufferFlagMutex);
 	return needsData;
 }
 
 bool GstAppSrcPipeline::SendFrame(unsigned char* frameBuffer, unsigned int bufferSize)
 {
-	boost::mutex::scoped_lock(pushBufferFlagMutex);
+	std::unique_lock<std::mutex> lock(pushBufferFlagMutex);
 	if (!needsData) {
 		std::cout << "CHANGED\n";	
 		return false;
@@ -78,7 +80,7 @@ void GstAppSrcPipeline::DestroyCallback(GstAppSrcPipeline* multicaster)
 void GstAppSrcPipeline::NeedDataCallback(GstAppSrc* appsrc, guint length, gpointer user_data)
 {
 	GstAppSrcPipeline* multicaster = (GstAppSrcPipeline*) user_data;
-	boost::mutex::scoped_lock(multicaster->pushBufferFlagMutex);
+	std::unique_lock<std::mutex> lock(multicaster->pushBufferFlagMutex);
 	multicaster->needsData = true;
 	//std::cout << "NEED\n";
 }
@@ -86,7 +88,7 @@ void GstAppSrcPipeline::NeedDataCallback(GstAppSrc* appsrc, guint length, gpoint
 void GstAppSrcPipeline::EnoughDataCallback(GstAppSrc* appsrc, gpointer user_data)
 {
 	GstAppSrcPipeline* multicaster = (GstAppSrcPipeline*) user_data;
-	boost::mutex::scoped_lock(multicaster->pushBufferFlagMutex);
+	std::unique_lock<std::mutex> lock(multicaster->pushBufferFlagMutex);
 	multicaster->needsData = false;
 	std::cout << "ENOUGH===================================================================================\n";
 }

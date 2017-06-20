@@ -14,7 +14,8 @@
  * limitations under the License.
  */
 
-#include <boost/thread/lock_guard.hpp>
+#include <mutex>
+#include <iostream>
 
 #include "GstAppSinkPipeline.h"
 #include "GstreamerPipelines.h"
@@ -92,7 +93,7 @@ void GstAppSinkPipeline::ReceiveNewSample()
 	
 	if (sample)
 	{
-		boost::lock_guard<boost::mutex> guard(bufferMutex);
+		std::lock_guard<std::mutex> guard(bufferMutex);
 		if (currentBuffer != 0) // release if not empty
 		{
 			//std::cout << "DROP!\n";
@@ -105,7 +106,7 @@ void GstAppSinkPipeline::ReceiveNewSample()
 
 void GstAppSinkPipeline::ReleaseFrameBuffer()
 {
-	boost::lock_guard<boost::mutex> guard(bufferMutex);
+	std::lock_guard<std::mutex> guard(bufferMutex);
 	if (retrievedBuffer) gst_sample_unref(retrievedBuffer);
 	retrievedBuffer = 0;
 }
@@ -113,7 +114,7 @@ void GstAppSinkPipeline::ReleaseFrameBuffer()
 
 bool GstAppSinkPipeline::GetIsNewFrameAvailable()
 {
-	boost::lock_guard<boost::mutex> guard(bufferMutex);
+	std::lock_guard<std::mutex> guard(bufferMutex);
 	return ((retrievedBuffer == 0) && (currentBuffer != 0));
 }
 
@@ -121,7 +122,7 @@ bool GstAppSinkPipeline::GetLatestFrameBuffer(void** frameBuffer)
 {
 	bool retrieving = false;
 	
-	boost::lock_guard<boost::mutex> guard(bufferMutex);
+	std::lock_guard<std::mutex> guard(bufferMutex);
 	if (retrievedBuffer == 0)
 	{
 		if (currentBuffer != 0)

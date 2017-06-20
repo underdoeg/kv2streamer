@@ -16,6 +16,8 @@
 
 #pragma once
 
+#include <mutex>
+
 #include <gst/app/gstappsink.h>
 #include "GstPipelineWrapper.h"
 
@@ -43,7 +45,7 @@ private:
 
 	GstElement* 	appsink;
 
-	boost::mutex	bufferMutex;
+	std::mutex	bufferMutex;
 	void			ReceiveNewSample();
 	GstSample*		retrievedBuffer;
 	GstSample*		currentBuffer;

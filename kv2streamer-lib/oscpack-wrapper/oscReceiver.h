@@ -17,7 +17,8 @@
 #pragma once
 
 #include <string>
-#include <boost/thread.hpp>
+#include <thread>
+#include <mutex>
 #include <boost/signals2.hpp>
 
 #include <oscpack/osc/OscReceivedElements.h>
@@ -66,9 +67,9 @@ private:
 	bool 						isListening;
 	oscMessage*					currentMessage;
 	
-	boost::thread				listeningThread;
-	boost::mutex				listenerMutex;
-	boost::signals2::signal<void (oscMessage*)> 	signalNewOscMessageReceived;
+	std::thread				listeningThread;
+	std::mutex				listenerMutex;
+	boost::signal<void (oscMessage*)> 	signalNewOscMessageReceived;
 	
 	MessageRetrievalMode retrievalMode;
 
